@@ -2,20 +2,11 @@
 
 # Google Wonder WiFi Virtual Device driver.
 
-load(
-    "//build/kernel/kleaf:kernel.bzl",
-    "ddk_headers",
-    "ddk_module",
-)
+load("//build/kernel/kleaf:kernel.bzl", "checkpatch", "ddk_headers", "ddk_module")
 
-label_flag(
-    name = "wonder_kernel",
-    build_setting_default = "//common:kernel_aarch64_undefined",
-)
-
-label_flag(
-    name = "wonder_kernel_headers",
-    build_setting_default = "//common:all_headers_aarch64_undefined",
+checkpatch(
+    name = "checkpatch",
+    checkpatch_pl = "//common:scripts/checkpatch.pl",
 )
 
 filegroup(
@@ -24,7 +15,8 @@ filegroup(
         "Kconfig",
     ],
     visibility = [
-        "//visibility:public",
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/wlan:__subpackages__",
     ],
 )
 
@@ -49,15 +41,15 @@ ddk_module(
             ],
         },
     },
-    defconfig = "wonder_fragment",
+    defconfig = "defconfig",
     kconfig = "Kconfig",
-    kernel_build = ":wonder_kernel",
+    kernel_build = "//private/devices/google/common:kernel",
     visibility = [
-        "//visibility:public",
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/wlan:__subpackages__",
     ],
     deps = [
-        ":wonder_headers",
-        ":wonder_kernel_headers",
+        "//common:all_headers_aarch64",
     ],
 )
 
@@ -65,12 +57,15 @@ ddk_headers(
     name = "wonder_headers",
     hdrs = glob([
         "include/**/*.h",
-    ]),
+    ]) + [
+        "Makefile.include",
+    ],
     includes = [
         "include",
     ],
     visibility = [
         # keep sorted
-        "//visibility:public",
+        "//private/devices/google:__subpackages__",
+        "//private/google-modules/wlan:__subpackages__",
     ],
 )
