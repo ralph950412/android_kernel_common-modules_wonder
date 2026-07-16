@@ -13,6 +13,11 @@ label_flag(
     build_setting_default = "//common:kernel_aarch64_undefined",
 )
 
+label_flag(
+    name = "wonder_kernel_headers",
+    build_setting_default = "//common:all_headers_aarch64_undefined",
+)
+
 filegroup(
     name = "wonder.kconfig",
     srcs = [
@@ -52,6 +57,7 @@ ddk_module(
     ],
     deps = [
         ":wonder_headers",
+        ":wonder_kernel_headers",
     ],
 )
 
